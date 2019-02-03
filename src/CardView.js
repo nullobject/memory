@@ -60,7 +60,7 @@ const CardView = ({ bus, card, classes, selected }) => {
 
   const handleClick = () => {
     if (!card.disabled) {
-      bus.emit('select', { card })
+      bus.value({ type: 'select', card })
     }
   }
 
