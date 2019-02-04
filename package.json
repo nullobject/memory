@@ -1,10 +1,16 @@
 {
   "name": "memory",
   "version": "1.0.0",
+  "description": "",
+  "author": "Josh Bassett <josh.bassett@gmail.com> (http://joshbassett.info)",
+  "license": "MIT",
   "private": true,
-  "main": "dist/memory.min.js",
+  "scripts": {
+    "start": "make start",
+    "test": "make test"
+  },
   "devDependencies": {
-    "bulb": "^3.1.0",
+    "bulb": "^4.0.1",
     "classnames": "^2.2.6",
     "fkit": "^1.5.1",
     "parcel-bundler": "^1.11.0",
