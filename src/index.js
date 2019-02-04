@@ -1,7 +1,6 @@
 import React from 'react'
-import nanobus from 'nanobus'
-import { Signal } from 'bulb'
-import { copy, eq, get, shuffle } from 'fkit'
+import { Bus } from 'bulb'
+import { concat, get, shuffle } from 'fkit'
 import { render } from 'react-dom'
 
 import Card from './Card'
@@ -14,25 +13,33 @@ const SHAPES = ['🐡', '🐙', '🐔', '🐛', '🐶', '🐝', '🐵', '🐰']
 // The number of milliseconds to wait before deslecting cards.
 const DESELECT_DELAY = 1000
 
+// Returns `true` if the length of the given array is two, `false` otherwise.
+const isPair = as => as.length === 2
+
 const root = document.getElementById('root')
-const shapes = shuffle(SHAPES.concat(SHAPES))
+const shapes = shuffle(concat(SHAPES, SHAPES))
 const cards = shapes.map((shape, index) => new Card(shape, index))
 const game = new Game(cards)
-const bus = nanobus()
-const busSignal = fromBus(bus)
-const gameSignal = busSignal.scan(transformer, game).dedupe()
-const selectedCardsSignal = gameSignal.map(get('selectedCards'))
+const bus = new Bus()
+const gameSignal = bus.scan(transformer, game).dedupe()
 
-// A signal that emits an event every time the user selects a pair of cards.
-const deselectAllSignal = selectedCardsSignal
-  .filter(cards => eq(2, cards.length))
-  .delay(DESELECT_DELAY)
-  .always('deselect-all')
+// A signal that emits the selected pairs of cards.
+const pairsSignal = gameSignal.map(get('selectedCards')).filter(isPair)
+
+// A signal that emits the number of guesses.
+const guessesSignal = pairsSignal.scan(a => a + 1, 0)
+
+guessesSignal.subscribe(console.log)
+
+// A signal that deselects cards a short while after a pair of cards have been
+// selected.
+const deselectSignal = pairsSignal.delay(DESELECT_DELAY).always('deselect-all')
 
 const subscriptions = [
-  // Plug the deselect signal into the bus.
-  deselectAllSignal.subscribe(a => bus.emit(a)),
+  // Connect the deselect signal to the bus.
+  bus.connect(deselectSignal),
 
+  // Render the UI whenever the state changes.
   gameSignal.subscribe(game => render(<GameView bus={bus} game={game} />, root))
 ]
 
@@ -43,26 +50,11 @@ if (module.hot) {
   })
 }
 
-/**
- * Creates a new signal from a bus.
- *
- * @param bus A bus.
- * @returns A new signal.
- */
-function fromBus (bus) {
-  return new Signal(emit => {
-    const handler = (type, data) => emit.value({ ...data, type })
-    bus.addListener('*', handler)
-    return () => bus.removeListener('*', handler)
-  })
-}
-
 function transformer(game, event) {
-  console.log(event)
-  if (event.type === 'select') {
-    game = game.selectCard(event.card)
-  } else if (event.type === 'deselect-all') {
+  if (event === 'deselect-all') {
     game = game.deselectAllCards()
+  } else if (event.type === 'select') {
+    game = game.selectCard(event.card)
   }
 
   return game

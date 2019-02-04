@@ -1,12 +1,9 @@
-.PHONY: build clean node_modules start
+.PHONY: build clean start
 
-node_modules:
-	@npm install
+start:
+	@npx parcel -p 4002 index.html
 
-start: node_modules
-	@npx parcel -p 4001 index.html
-
-build: node_modules
+build:
 	@npx parcel build index.html --public-url .
 
 clean:

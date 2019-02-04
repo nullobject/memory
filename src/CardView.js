@@ -23,17 +23,16 @@ const styles = {
     transformStyle: 'preserve-3d'
   },
   front: {
-    color: 'papayawhip',
+    backgroundColor: 'papayawhip',
     zIndex: 2
   },
   back: {
-    color: 'mintcream',
+    backgroundColor: 'mintcream',
     transform: 'rotateY(180deg)'
   },
   face: {
     alignItems: 'baseline',
     backfaceVisibility: 'hidden',
-    background: 'radial-gradient(#e66465, #9198e5)',
     border: '1px solid #ccc',
     boxShadow: '0 3px 6px #0007',
     display: 'flex',
@@ -60,7 +59,7 @@ const CardView = ({ bus, card, classes, selected }) => {
 
   const handleClick = () => {
     if (!card.disabled) {
-      bus.emit('select', { card })
+      bus.value({ type: 'select', card })
     }
   }
 
