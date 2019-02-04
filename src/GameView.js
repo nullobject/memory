@@ -3,17 +3,31 @@ import injectSheet from 'react-jss'
 import { elem } from 'fkit'
 
 import CardView from './CardView'
+import background from './background.png'
 
 const styles = {
-  '@global body': {
-    userSelect: 'none'
+  '@global': {
+    html: {
+      height: '100%',
+      width: '100%'
+    },
+    body: {
+      alignItems: 'center',
+      background: `radial-gradient(circle, hsla(180, 20%, 20%, 0.5), hsla(0, 0%, 0%, 0.75)), url(${background})`,
+      display: 'flex',
+      height: '100%',
+      justifyContent: 'center',
+      margin: 0,
+      userSelect: 'none',
+      width: '100%'
+    }
   },
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     fontSize: 100,
     height: '5em',
-    width: '5em',
+    width: '5em'
   }
 }
 
