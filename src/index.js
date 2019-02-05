@@ -26,11 +26,6 @@ const gameSignal = bus.scan(transformer, game).dedupe()
 // A signal that emits the selected pairs of cards.
 const pairsSignal = gameSignal.map(get('selectedCards')).filter(isPair)
 
-// A signal that emits the number of guesses.
-const guessesSignal = pairsSignal.scan(a => a + 1, 0)
-
-guessesSignal.subscribe(console.log)
-
 // A signal that deselects cards a short while after a pair of cards have been
 // selected.
 const deselectSignal = pairsSignal.delay(DESELECT_DELAY).always('deselect-all')
@@ -50,12 +45,13 @@ if (module.hot) {
   })
 }
 
-function transformer(game, event) {
+function transformer (game, event) {
   if (event === 'deselect-all') {
     game = game.deselectAllCards()
   } else if (event.type === 'select') {
     game = game.selectCard(event.card)
   }
 
+  console.log(game)
   return game
 }

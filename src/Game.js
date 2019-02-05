@@ -1,4 +1,25 @@
-import { all, append, copy, head, set, values } from 'fkit'
+import { append, copy, set, values } from 'fkit'
+
+// Returns `true` if the length of the given array is two, `false` otherwise.
+function isPair (cards) {
+  return cards.length === 2
+}
+
+function isMatchingPair (cards) {
+  if (isPair(cards)) {
+    const [a, b] = cards
+    return a.equals(b)
+  } else {
+    return false
+  }
+}
+
+// Disables each card from the set of selected cards.
+function disableCards (cardsMap, selectedCards) {
+  return selectedCards.reduce((cardsMap, card) =>
+    set(card.id, card.disable(), cardsMap)
+  , cardsMap)
+}
 
 export default class Game {
   constructor (cards) {
@@ -6,6 +27,7 @@ export default class Game {
       set(card.id, card, cardsMap)
     , {})
     this.selectedCards = []
+    this.guesses = 0
   }
 
   get cards () {
@@ -18,41 +40,27 @@ export default class Game {
       return this
     }
 
-    // Ensure that we can only select two cards.
-    if (this.selectedCards.length >= 2) {
+    // Ensure that we can only select a pair of cards.
+    if (isPair(this.selectedCards)) {
       return this
     }
+
+    let cardsMap = this.cardsMap
 
     // Select the card.
     const selectedCards = append(card, this.selectedCards)
 
-    let game = copy(this, { selectedCards })
-
-    // If the selected cards are matching then disable them.
-    if (game.selectedCards.length >= 2 && game.selectedCardsAreEqual()) {
-      game = game.disableSelectedCards()
+    if (isMatchingPair(selectedCards)) {
+      cardsMap = disableCards(cardsMap, selectedCards)
     }
 
-    return game
+    // Increment the number of guesses.
+    const guesses = this.guesses + (isPair(selectedCards) ? 1 : 0)
+
+    return copy(this, { cardsMap, selectedCards, guesses })
   }
 
-  // Returns true if all the selected cards are equal.
-  selectedCardsAreEqual () {
-    const first = head(this.selectedCards)
-    return all(card => card.equals(first), this.selectedCards)
-  }
-
-  // Deselects all cards.
   deselectAllCards () {
     return copy(this, { selectedCards: [] })
-  }
-
-  // Disables the selected cards.
-  disableSelectedCards () {
-    // Disable each card from the set of selected cards.
-    const cardsMap = this.selectedCards.reduce((cardsMap, card) =>
-      set(card.id, card.disable(), cardsMap)
-    , this.cardsMap)
-    return copy(this, { cardsMap })
   }
 }
