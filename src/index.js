@@ -52,6 +52,5 @@ function transformer (game, event) {
     game = game.selectCard(event.card)
   }
 
-  console.log(game)
   return game
 }
