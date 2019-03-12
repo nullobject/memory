@@ -21,7 +21,7 @@
   "dependencies": {
     "bulb": "^5.0.0",
     "classnames": "^2.2.6",
-    "fkit": "^1.5.1",
+    "fkit": "^2.0.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-jss": "^8.6.1"
