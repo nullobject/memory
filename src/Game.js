@@ -1,18 +1,6 @@
 import { append, copy, set, values } from 'fkit'
 
-// Returns `true` if the length of the given array is two, `false` otherwise.
-function isPair (cards) {
-  return cards.length === 2
-}
-
-function isMatchingPair (cards) {
-  if (isPair(cards)) {
-    const [a, b] = cards
-    return a.equals(b)
-  } else {
-    return false
-  }
-}
+import { isMatchingPair, isPair } from './utils'
 
 // Disables each card from the set of selected cards.
 function disableCards (cardsMap, selectedCards) {
