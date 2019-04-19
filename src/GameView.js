@@ -18,28 +18,32 @@ const styles = {
       height: '100%',
       justifyContent: 'center',
       margin: 0,
+      overflow: 'hidden',
       userSelect: 'none',
       width: '100%'
     }
   },
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
     fontSize: 100,
     height: '5em',
+    position: 'relative',
     width: '5em'
   }
 }
 
 const GameView = ({ bus, classes, game }) => {
-  const cardViews = game.cards.map(card =>
-    <CardView
-      bus={bus}
-      card={card}
-      key={card.toString()}
-      selected={elem(card, game.selectedCards)}
-    />
-  )
+  const cardViews = game.cards.map((card, index) => {
+    // FIXME: Why do we need to check disabled as well?
+    const selected = elem(card, game.selectedCards) || card.disabled
+    return (
+      <CardView
+        bus={bus}
+        card={card}
+        key={card.toString()}
+        selected={selected}
+      />
+    )
+  })
 
   return (
     <div className={classes.root}>{cardViews}</div>

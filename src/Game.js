@@ -9,6 +9,12 @@ function disableCards (cardsMap, selectedCards) {
   , cardsMap)
 }
 
+function removeCards (cardsMap, selectedCards) {
+  return selectedCards.reduce((cardsMap, card) =>
+    set(card.id, card.remove(), cardsMap)
+  , cardsMap)
+}
+
 export default class Game {
   constructor (cards) {
     this.cardsMap = cards.reduce((cardsMap, card) =>
@@ -49,6 +55,12 @@ export default class Game {
   }
 
   deselectAllCards () {
-    return copy(this, { selectedCards: [] })
+    let cardsMap = this.cardsMap
+
+    if (isMatchingPair(this.selectedCards)) {
+      cardsMap = removeCards(cardsMap, this.selectedCards)
+    }
+
+    return copy(this, { cardsMap, selectedCards: [] })
   }
 }

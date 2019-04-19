@@ -1,20 +1,25 @@
 import React from 'react'
 import injectSheet from 'react-jss'
 import classnames from 'classnames'
+import { animated, config, useSpring } from 'react-spring'
+
+import { SIZE } from './Card'
+
+function transform (position, rotation) {
+  return `translate(${position[0]}px, ${position[1]}px) rotateX(${rotation[0]}deg) rotateY(${rotation[1]}deg) rotateZ(${rotation[2]}deg) scale(1)`
+}
 
 const styles = {
   root: {
     boxSizing: 'border-box',
     cursor: 'pointer',
-    height: '25%',
+    height: SIZE[1],
     padding: 4,
-    perspective: 800,
-    width: '25%',
+    position: 'absolute',
+    perspective: 600,
+    width: SIZE[0],
     '&$selected $flipper': {
       transform: 'rotateY(180deg)'
-    },
-    '&$disabled $front': {
-      color: '#3cb371'
     }
   },
   flipper: {
@@ -34,7 +39,8 @@ const styles = {
     alignItems: 'baseline',
     backfaceVisibility: 'hidden',
     border: '1px solid #ccc',
-    boxShadow: '0 3px 6px #0007',
+    borderRadius: 4,
+    boxShadow: '0px 10px 30px -5px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     justifyContent: 'center',
     position: 'absolute'
@@ -44,17 +50,13 @@ const styles = {
     height: '100%',
     boxSizing: 'border-box'
   },
-  disabled: {},
   selected: {}
 }
 
 const CardView = ({ bus, card, classes, selected }) => {
   const className = classnames(
     classes.root,
-    {
-      [classes.disabled]: card.disabled,
-      [classes.selected]: selected
-    }
+    { [classes.selected]: selected }
   )
 
   const handleClick = () => {
@@ -63,13 +65,22 @@ const CardView = ({ bus, card, classes, selected }) => {
     }
   }
 
+  const props = useSpring({
+    config: config.wobbly,
+    transform: transform(card.position, card.rotation)
+  })
+
   return (
-    <div className={className} onClick={handleClick}>
+    <animated.div
+      className={className}
+      onClick={handleClick}
+      style={{ ...props, zIndex: card.zIndex }}
+    >
       <div className={classnames(classes.square, classes.flipper)}>
-        <div className={classnames(classes.square, classes.face, classes.front)}>{card.disabled ? '✅' : '❓'}</div>
+        <div className={classnames(classes.square, classes.face, classes.front)}>❓</div>
         <div className={classnames(classes.square, classes.face, classes.back)}>{card.shape}</div>
       </div>
-    </div>
+    </animated.div>
   )
 }
 
