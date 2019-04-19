@@ -2,25 +2,31 @@ import { append, copy, set, values } from 'fkit'
 
 import { isMatchingPair, isPair } from './utils'
 
-// Disables each card from the set of selected cards.
-function disableCards (cardsMap, selectedCards) {
-  return selectedCards.reduce((cardsMap, card) =>
+// Disables the given cards in the cards map.
+function disableCards (cards, cardsMap) {
+  return cards.reduce((cardsMap, card) =>
     set(card.id, card.disable(), cardsMap)
   , cardsMap)
 }
 
-function removeCards (cardsMap, selectedCards) {
-  return selectedCards.reduce((cardsMap, card) =>
+// Removes the given cards in the cards map.
+function removeCards (cards, cardsMap) {
+  return cards.reduce((cardsMap, card) =>
     set(card.id, card.remove(), cardsMap)
   , cardsMap)
 }
 
 export default class Game {
   constructor (cards) {
+    // A map from card IDs to cards.
     this.cardsMap = cards.reduce((cardsMap, card) =>
       set(card.id, card, cardsMap)
     , {})
+
+    // The list of selected cards.
     this.selectedCards = []
+
+    // The number of guesses the player has made.
     this.guesses = 0
   }
 
@@ -45,7 +51,7 @@ export default class Game {
     const selectedCards = append(card, this.selectedCards)
 
     if (isMatchingPair(selectedCards)) {
-      cardsMap = disableCards(cardsMap, selectedCards)
+      cardsMap = disableCards(selectedCards, cardsMap)
     }
 
     // Increment the number of guesses.
@@ -59,7 +65,7 @@ export default class Game {
 
     // Remove the selected cards.
     if (isMatchingPair(this.selectedCards)) {
-      cardsMap = removeCards(cardsMap, this.selectedCards)
+      cardsMap = removeCards(this.selectedCards, cardsMap)
     }
 
     // Deselect all cards.
