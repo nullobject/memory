@@ -1,10 +1,11 @@
 import { copy } from 'fkit'
 
 export default class Card {
-  constructor (shape, id) {
+  constructor (shape, index) {
     this.disabled = false
-    this.id = id
+    this.id = index
     this.shape = shape
+    this.zIndex = index
   }
 
   // Disables the card.
