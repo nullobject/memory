@@ -18,6 +18,15 @@ export default class Card {
     return copy(this, { disabled: true })
   }
 
+  // Removes the card from the board.
+  remove () {
+    return copy(this, {
+      position: [this.position[0], 1000],
+      rotation: [45, 0, 0],
+      zIndex: 100
+    })
+  }
+
   // Returns true if a given card is equal to the card.
   equals (other) {
     return other.shape === this.shape
