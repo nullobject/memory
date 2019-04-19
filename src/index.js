@@ -26,9 +26,9 @@ const gameSignal = bus.scan(transformer, game).dedupe()
 // A signal that emits selected pairs of cards.
 const pairsSignal = gameSignal.map(get('selectedCards')).filter(isPair)
 
-// A signal that emits a `deselect-all` event a short time after a pair of
+// A signal that emits a `end-turn` event a short time after a pair of
 // cards has been selected.
-const deselectSignal = pairsSignal.delay(DESELECT_DELAY).always('deselect-all')
+const deselectSignal = pairsSignal.delay(DESELECT_DELAY).always('end-turn')
 
 const subscriptions = [
   // Connect the deselect signal to the bus.
@@ -46,8 +46,8 @@ if (module.hot) {
 }
 
 function transformer (game, event) {
-  if (event === 'deselect-all') {
-    game = game.deselectAllCards()
+  if (event === 'end-turn') {
+    game = game.endTurn()
   } else if (event.type === 'select') {
     game = game.selectCard(event.card)
   }

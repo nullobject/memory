@@ -54,13 +54,15 @@ export default class Game {
     return copy(this, { cardsMap, selectedCards, guesses })
   }
 
-  deselectAllCards () {
+  endTurn () {
     let cardsMap = this.cardsMap
 
+    // Remove the selected cards.
     if (isMatchingPair(this.selectedCards)) {
       cardsMap = removeCards(cardsMap, this.selectedCards)
     }
 
+    // Deselect all cards.
     return copy(this, { cardsMap, selectedCards: [] })
   }
 }
