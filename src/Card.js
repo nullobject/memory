@@ -9,6 +9,7 @@ export default class Card {
     this.id = index
     this.shape = shape
     this.position = [(index % COLUMNS) * SIZE[0], Math.floor(index / COLUMNS) * SIZE[1]]
+    this.rotation = [0, 0, 0]
     this.zIndex = index
   }
 
