@@ -6,7 +6,6 @@ import { render } from 'react-dom'
 import Card from './Card'
 import Game from './Game'
 import GameView from './GameView'
-import { isPair } from './utils'
 
 // The shapes to use for the pairs of cards.
 const SHAPES = ['🐡', '🐙', '🐔', '🐛', '🐶', '🐝', '🐵', '🐰']
@@ -24,7 +23,9 @@ const bus = new Bus()
 const gameSignal = bus.scan(transformer, game).dedupe()
 
 // A signal that emits selected pairs of cards.
-const pairsSignal = gameSignal.map(get('selectedCards')).filter(isPair)
+const pairsSignal = gameSignal
+  .map(get('selectedCards'))
+  .filter(cards => cards.length >= 2)
 
 // A signal that emits a `end-turn` event a short time after a pair of
 // cards has been selected.
