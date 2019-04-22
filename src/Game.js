@@ -1,6 +1,6 @@
-import { copy, get, set, values } from 'fkit'
+import { copy, get, head, set, values } from 'fkit'
 
-import { isMatchingPair, isPair } from './utils'
+import { isMatchingPair } from './utils'
 
 // Disables the given cards in the cards map.
 function disableCards (cards, cardsMap) {
@@ -49,8 +49,15 @@ export default class Game {
     this.guesses = 0
   }
 
+  /**
+   * Selects the card with the given ID.
+   *
+   * @param {Number} cardId The card ID.
+   * @returns {Game} The new game state.
+   */
   selectCard (cardId) {
     let cardsMap = this.cardsMap
+    let guesses = this.guesses
     const selectedCards = this.selectedCards
     const card = cardsMap[cardId]
 
@@ -58,30 +65,40 @@ export default class Game {
     if (cardsMap[cardId].selected) return this
 
     // Ensure that we can only select a single pair of cards.
-    if (isPair(selectedCards)) return this
+    if (selectedCards.length >= 2) return this
 
     // Select the card.
     cardsMap = selectCards([card], cardsMap)
 
-    // Disable matching pairs.
-    if (isMatchingPair(selectedCards)) {
-      cardsMap = disableCards(selectedCards, cardsMap)
-    }
+    if (selectedCards.length === 1) {
+      const pair = [head(selectedCards), card]
 
-    // Increment the number of guesses.
-    const guesses = this.guesses + (isPair(selectedCards) ? 1 : 0)
+      // Disable matching pairs.
+      if (isMatchingPair(pair)) {
+        cardsMap = disableCards(pair, cardsMap)
+      }
+
+      // Increment guesses.
+      guesses++
+    }
 
     return copy(this, { cardsMap, guesses })
   }
 
+  /**
+   * Ends the current turn. This will deselect the selected cards and remove any
+   * matching pairs from the board.
+   *
+   * @returns {Game} The new game state.
+   */
   endTurn () {
     let cardsMap = this.cardsMap
     const selectedCards = this.selectedCards
 
-    // Deselect all cards.
+    // Deselect selected cards.
     cardsMap = deselectCards(selectedCards, cardsMap)
 
-    // Remove the selected cards.
+    // Remove matching pairs.
     if (isMatchingPair(selectedCards)) {
       cardsMap = removeCards(selectedCards, cardsMap)
     }
