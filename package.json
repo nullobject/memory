@@ -24,6 +24,7 @@
     "fkit": "^3.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-jss": "^8.6.1"
+    "react-jss": "^8.6.1",
+    "react-spring": "^8.0.19"
   }
 }
