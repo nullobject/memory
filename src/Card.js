@@ -5,6 +5,7 @@ export const SIZE = [128, 128]
 
 export default class Card {
   constructor (shape, index) {
+    this.selected = false
     this.disabled = false
     this.id = index
     this.shape = shape
@@ -13,12 +14,38 @@ export default class Card {
     this.zIndex = index
   }
 
-  // Disables the card.
+  /**
+   * Selects the card.
+   *
+   * @returns {Card} The new card state.
+   */
+  select () {
+    return copy(this, { selected: true })
+  }
+
+  /**
+   * Deselects the card.
+   *
+   * @returns {Card} The new card state.
+   */
+  deselect () {
+    return copy(this, { selected: false })
+  }
+
+  /**
+   * Disables the card.
+   *
+   * @returns {Card} The new card state.
+   */
   disable () {
     return copy(this, { disabled: true })
   }
 
-  // Removes the card from the board.
+  /**
+   * Removes the card from the board.
+   *
+   * @returns {Card} The new card state.
+   */
   remove () {
     return copy(this, {
       position: [this.position[0], 1000],
@@ -27,12 +54,21 @@ export default class Card {
     })
   }
 
-  // Returns true if a given card is equal to the card.
+  /**
+   * Returns `true` if this card matches the given card.
+   *
+   * @param {Card} other The other card.
+   * @returns {Card} The new card state.
+   */
   equals (other) {
     return other.shape === this.shape
   }
 
-  // Returns the string representation of the card.
+  /**
+   * Returns the string representation of the card.
+   *
+   * @returns {String} The string representation.
+   */
   toString () {
     return 'card-' + this.id
   }
