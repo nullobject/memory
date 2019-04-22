@@ -49,7 +49,7 @@ function transformer (game, event) {
   if (event === 'end-turn') {
     game = game.endTurn()
   } else if (event.type === 'select') {
-    game = game.selectCard(event.card)
+    game = game.selectCard(event.cardId)
   }
 
   return game
