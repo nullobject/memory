@@ -9,9 +9,9 @@ let a, b, c
 
 describe('Game', () => {
   beforeEach(() => {
-    a = { id: 1, selected: false, select: jest.fn(), deselect: jest.fn(), disable: jest.fn(), remove: jest.fn() }
-    b = { id: 2, selected: true, select: jest.fn(), deselect: jest.fn(), disable: jest.fn(), remove: jest.fn() }
-    c = { id: 3, selected: true, select: jest.fn(), deselect: jest.fn(), disable: jest.fn(), remove: jest.fn() }
+    a = { id: 1, selected: false, disabled: false, select: jest.fn(() => a), deselect: jest.fn(() => a), disable: jest.fn(() => a), remove: jest.fn(() => a) }
+    b = { id: 2, selected: true, disabled: false, select: jest.fn(() => b), deselect: jest.fn(() => b), disable: jest.fn(() => b), remove: jest.fn(() => b) }
+    c = { id: 3, selected: true, disabled: true, select: jest.fn(() => c), deselect: jest.fn(() => c), disable: jest.fn(() => c), remove: jest.fn(() => c) }
   })
 
   describe('#cards', () => {
@@ -93,30 +93,18 @@ describe('Game', () => {
       expect(c.deselect).toHaveBeenCalled()
     })
 
-    it('removes matching pairs', () => {
+    it('removes disabled cards', () => {
       isMatchingPair.mockReturnValue(true)
 
       const game = new Game([a, b, c])
 
-      expect(b.deselect).not.toHaveBeenCalled()
       expect(c.deselect).not.toHaveBeenCalled()
 
       game.endTurn()
 
       expect(a.remove).not.toHaveBeenCalled()
-      expect(b.remove).toHaveBeenCalled()
-      expect(c.remove).toHaveBeenCalled()
-    })
-
-    it('does not remove unmatching pairs', () => {
-      isMatchingPair.mockReturnValue(false)
-
-      const game = new Game([a, b, c])
-      game.endTurn()
-
-      expect(a.remove).not.toHaveBeenCalled()
       expect(b.remove).not.toHaveBeenCalled()
-      expect(c.remove).not.toHaveBeenCalled()
+      expect(c.remove).toHaveBeenCalled()
     })
   })
 })

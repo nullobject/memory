@@ -1,32 +1,32 @@
-import { copy, get, head, set, values } from 'fkit'
+import { copy, get, head, set, update, values } from 'fkit'
 
 import { isMatchingPair } from './utils'
 
 // Disables the given cards in the cards map.
 function disableCards (cards, cardsMap) {
   return cards.reduce((cardsMap, card) =>
-    set(card.id, card.disable(), cardsMap)
+    update(card.id, card => card.disable(), cardsMap)
   , cardsMap)
 }
 
 // Deselects the given cards in the cards map.
 function deselectCards (cards, cardsMap) {
   return cards.reduce((cardsMap, card) =>
-    set(card.id, card.deselect(), cardsMap)
+    update(card.id, card => card.deselect(), cardsMap)
   , cardsMap)
 }
 
 // Selects the given cards in the cards map.
 function selectCards (cards, cardsMap) {
   return cards.reduce((cardsMap, card) =>
-    set(card.id, card.select(), cardsMap)
+    update(card.id, card => card.select(), cardsMap)
   , cardsMap)
 }
 
 // Removes the given cards in the cards map.
 function removeCards (cards, cardsMap) {
   return cards.reduce((cardsMap, card) =>
-    set(card.id, card.remove(), cardsMap)
+    update(card.id, card => card.remove(), cardsMap)
   , cardsMap)
 }
 
@@ -37,6 +37,10 @@ export default class Game {
 
   get selectedCards () {
     return this.cards.filter(get('selected'))
+  }
+
+  get disabledCards () {
+    return this.cards.filter(get('disabled'))
   }
 
   constructor (cards) {
@@ -52,17 +56,17 @@ export default class Game {
   /**
    * Selects the card with the given ID.
    *
-   * @param {Number} cardId The card ID.
+   * @param {Number} id The card ID.
    * @returns {Game} The new game state.
    */
-  selectCard (cardId) {
+  selectCard (id) {
     let cardsMap = this.cardsMap
     let guesses = this.guesses
     const selectedCards = this.selectedCards
-    const card = cardsMap[cardId]
+    const card = cardsMap[id]
 
     // Ensure the card is not already selected.
-    if (cardsMap[cardId].selected) return this
+    if (card.selected) return this
 
     // Ensure that we can only select a single pair of cards.
     if (selectedCards.length >= 2) return this
@@ -93,15 +97,12 @@ export default class Game {
    */
   endTurn () {
     let cardsMap = this.cardsMap
-    const selectedCards = this.selectedCards
 
     // Deselect selected cards.
-    cardsMap = deselectCards(selectedCards, cardsMap)
+    cardsMap = deselectCards(this.selectedCards, cardsMap)
 
-    // Remove matching pairs.
-    if (isMatchingPair(selectedCards)) {
-      cardsMap = removeCards(selectedCards, cardsMap)
-    }
+    // Remove disabled cards.
+    cardsMap = removeCards(this.disabledCards, cardsMap)
 
     return copy(this, { cardsMap })
   }
