@@ -3,9 +3,18 @@ import injectSheet from 'react-jss'
 import classnames from 'classnames'
 import { animated, config, useSpring } from 'react-spring'
 
-import { SIZE } from './Card'
+const COLUMNS = 4
+const SIZE = [128, 128]
 
-function transform (position, rotation) {
+function transform (card) {
+  const position = card.state === 'removed'
+    ? [(card.id % COLUMNS) * SIZE[0], 1000]
+    : [(card.id % COLUMNS) * SIZE[0], Math.floor(card.id / COLUMNS) * SIZE[1]]
+
+  const rotation = card.state === 'removed'
+    ? [45, 0, 0]
+    : [0, 0, 0]
+
   return `translate(${position[0]}px, ${position[1]}px) rotateX(${rotation[0]}deg) rotateY(${rotation[1]}deg) rotateZ(${rotation[2]}deg) scale(1)`
 }
 
@@ -68,14 +77,16 @@ const CardView = ({ bus, card, classes }) => {
 
   const props = useSpring({
     config: config.wobbly,
-    transform: transform(card.position, card.rotation)
+    transform: transform(card)
   })
+
+  const zIndex = card.state === 'removed' ? 100 : card.id
 
   return (
     <animated.div
       className={className}
       onClick={handleClick}
-      style={{ ...props, zIndex: card.zIndex }}
+      style={{ ...props, zIndex }}
     >
       <div className={classnames(classes.square, classes.flipper)}>
         <div className={classnames(classes.square, classes.face, classes.front)}>❓</div>

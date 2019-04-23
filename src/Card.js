@@ -1,16 +1,10 @@
-import { copy } from 'fkit'
-
-export const COLUMNS = 4
-export const SIZE = [128, 128]
+import { set } from 'fkit'
 
 export default class Card {
-  constructor (shape, index) {
-    this.id = index
+  constructor (shape, id) {
+    this.id = id
     this.shape = shape
     this.state = 'normal'
-    this.position = [(index % COLUMNS) * SIZE[0], Math.floor(index / COLUMNS) * SIZE[1]]
-    this.rotation = [0, 0, 0]
-    this.zIndex = index
   }
 
   /**
@@ -19,7 +13,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   select () {
-    return copy(this, { state: 'selected' })
+    return set('state', 'selected', this)
   }
 
   /**
@@ -28,7 +22,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   deselect () {
-    return copy(this, { state: 'normal' })
+    return set('state', 'normal', this)
   }
 
   /**
@@ -37,12 +31,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   remove () {
-    return copy(this, {
-      state: 'removed',
-      position: [this.position[0], 1000],
-      rotation: [45, 0, 0],
-      zIndex: 100
-    })
+    return set('state', 'removed', this)
   }
 
   /**

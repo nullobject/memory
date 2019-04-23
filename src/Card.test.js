@@ -21,9 +21,6 @@ describe('Card', () => {
     it('removes the card', () => {
       const result = card.remove()
       expect(result).toHaveProperty('state', 'removed')
-      expect(result).toHaveProperty('position', [0, 1000])
-      expect(result).toHaveProperty('rotation', [45, 0, 0])
-      expect(result).toHaveProperty('zIndex', 100)
     })
   })
 
