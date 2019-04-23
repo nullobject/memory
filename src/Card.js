@@ -32,21 +32,13 @@ export default class Card {
   }
 
   /**
-   * Disables the card.
-   *
-   * @returns {Card} The new card state.
-   */
-  disable () {
-    return copy(this, { state: 'disabled' })
-  }
-
-  /**
    * Removes the card from the board.
    *
    * @returns {Card} The new card state.
    */
   remove () {
     return copy(this, {
+      state: 'disabled',
       position: [this.position[0], 1000],
       rotation: [45, 0, 0],
       zIndex: 100

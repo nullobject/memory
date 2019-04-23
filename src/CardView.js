@@ -61,8 +61,8 @@ const CardView = ({ bus, card, classes }) => {
   )
 
   const handleClick = () => {
-    if (!card.disabled) {
-      bus.next({ type: 'select-card', cardId: card.id })
+    if (card.state === 'normal') {
+      bus.next({ type: 'select-card', id: card.id })
     }
   }
 

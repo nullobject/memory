@@ -1,13 +1,6 @@
-import { copy, get, head, set, update, values } from 'fkit'
+import { copy, set, update, values } from 'fkit'
 
 import { isMatchingPair } from './utils'
-
-// Disables the given cards in the cards map.
-function disableCards (cards, cardsMap) {
-  return cards.reduce((cardsMap, card) =>
-    update(card.id, card => card.disable(), cardsMap)
-  , cardsMap)
-}
 
 // Deselects the given cards in the cards map.
 function deselectCards (cards, cardsMap) {
@@ -35,16 +28,8 @@ export default class Game {
     return values(this.cardsMap)
   }
 
-  get activeCards () {
-    return this.cards.filter(card => card.state !== 'normal')
-  }
-
   get selectedCards () {
     return this.cards.filter(card => card.state === 'selected')
-  }
-
-  get disabledCards () {
-    return this.cards.filter(card => card.state === 'disabled')
   }
 
   constructor (cards) {
@@ -78,15 +63,8 @@ export default class Game {
     // Select the card.
     cardsMap = selectCards([card], cardsMap)
 
-    if (selectedCards.length === 1) {
-      const pair = [head(selectedCards), card]
-
-      // Disable matching pairs.
-      if (isMatchingPair(pair)) {
-        cardsMap = disableCards(pair, cardsMap)
-      }
-
-      // Increment guesses.
+    // Increment guesses.
+    if (selectedCards.length >= 1) {
       guesses++
     }
 
@@ -101,12 +79,15 @@ export default class Game {
    */
   endTurn () {
     let cardsMap = this.cardsMap
+    const selectedCards = this.selectedCards
 
-    // Deselect selected cards.
-    cardsMap = deselectCards(this.selectedCards, cardsMap)
-
-    // Remove disabled cards.
-    cardsMap = removeCards(this.disabledCards, cardsMap)
+    if (isMatchingPair(selectedCards)) {
+      // Remove matching cards.
+      cardsMap = removeCards(selectedCards, cardsMap)
+    } else {
+      // Deselect selected cards.
+      cardsMap = deselectCards(selectedCards, cardsMap)
+    }
 
     return copy(this, { cardsMap })
   }

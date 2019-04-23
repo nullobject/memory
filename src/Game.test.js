@@ -28,43 +28,12 @@ describe('Game', () => {
     })
   })
 
-  describe('#disabledCards', () => {
-    it('returns the selected cards', () => {
-      const game = new Game([a, b, c])
-      expect(game.disabledCards).toEqual([c])
-    })
-  })
-
   describe('#selectCards', () => {
     it('selects the card with the given ID', () => {
       const game = new Game([a, b, c])
       expect(a.select).not.toHaveBeenCalled()
       game.selectCard(1)
       expect(a.select).toHaveBeenCalled()
-    })
-
-    it('disables matching pairs', () => {
-      isMatchingPair.mockReturnValue(true)
-
-      const game = new Game([a, b, c])
-
-      expect(a.disable).not.toHaveBeenCalled()
-      expect(b.disable).not.toHaveBeenCalled()
-
-      game.selectCard(1)
-
-      expect(a.disable).toHaveBeenCalled()
-      expect(b.disable).toHaveBeenCalled()
-    })
-
-    it('does not disable unmatching pairs', () => {
-      isMatchingPair.mockReturnValue(false)
-
-      const game = new Game([a, b, c])
-      game.selectCard(1)
-
-      expect(a.disable).not.toHaveBeenCalled()
-      expect(b.disable).not.toHaveBeenCalled()
     })
 
     it('increments the guesses', () => {
@@ -87,7 +56,23 @@ describe('Game', () => {
   })
 
   describe('#endTurn', () => {
+    it('removes matching cards', () => {
+      isMatchingPair.mockReturnValue(true)
+
+      const game = new Game([a, b, c])
+
+      expect(b.remove).not.toHaveBeenCalled()
+
+      game.endTurn()
+
+      expect(a.remove).not.toHaveBeenCalled()
+      expect(b.remove).toHaveBeenCalled()
+      expect(c.remove).not.toHaveBeenCalled()
+    })
+
     it('deselects selected cards', () => {
+      isMatchingPair.mockReturnValue(false)
+
       const game = new Game([a, b, c])
 
       expect(b.deselect).not.toHaveBeenCalled()
@@ -97,18 +82,6 @@ describe('Game', () => {
       expect(a.deselect).not.toHaveBeenCalled()
       expect(b.deselect).toHaveBeenCalled()
       expect(c.deselect).not.toHaveBeenCalled()
-    })
-
-    it('removes disabled cards', () => {
-      const game = new Game([a, b, c])
-
-      expect(c.deselect).not.toHaveBeenCalled()
-
-      game.endTurn()
-
-      expect(a.remove).not.toHaveBeenCalled()
-      expect(b.remove).not.toHaveBeenCalled()
-      expect(c.remove).toHaveBeenCalled()
     })
   })
 })

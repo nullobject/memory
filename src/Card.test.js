@@ -17,16 +17,10 @@ describe('Card', () => {
     })
   })
 
-  describe('#disable', () => {
-    it('disables the card', () => {
-      const result = card.disable()
-      expect(result).toHaveProperty('state', 'disabled')
-    })
-  })
-
   describe('#remove', () => {
     it('removes the card', () => {
       const result = card.remove()
+      expect(result).toHaveProperty('state', 'disabled')
       expect(result).toHaveProperty('position', [0, 1000])
       expect(result).toHaveProperty('rotation', [45, 0, 0])
       expect(result).toHaveProperty('zIndex', 100)

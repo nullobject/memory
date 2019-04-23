@@ -24,7 +24,7 @@ const gameSignal = bus.scan(transformer, game).dedupe()
 
 // A signal that emits selected pairs of cards.
 const pairsSignal = gameSignal
-  .map(get('activeCards'))
+  .map(get('selectedCards'))
   .filter(cards => cards.length >= 2)
 
 // A signal that emits a `end-turn` event a short time after a pair of
@@ -50,7 +50,7 @@ function transformer (game, event) {
   if (event === 'end-turn') {
     game = game.endTurn()
   } else if (event.type === 'select-card') {
-    game = game.selectCard(event.cardId)
+    game = game.selectCard(event.id)
   }
 
   return game
