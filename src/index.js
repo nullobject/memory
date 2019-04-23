@@ -49,7 +49,7 @@ if (module.hot) {
 function transformer (game, event) {
   if (event === 'end-turn') {
     game = game.endTurn()
-  } else if (event.type === 'select') {
+  } else if (event.type === 'select-card') {
     game = game.selectCard(event.cardId)
   }
 
