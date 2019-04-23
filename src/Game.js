@@ -1,25 +1,19 @@
-import { copy, set, update, values } from 'fkit'
+import { applyMethod, copy, set, update, values } from 'fkit'
 
 import { isMatchingPair } from './utils'
 
-// Deselects the given cards in the cards map.
-function deselectCards (cards, cardsMap) {
+/**
+ * Applies the given method on the cards in the cards map.
+ *
+ * @param {String} method The method name.
+ * @param {Array} cards The list of cards.
+ * @param {Object} cardsMap The cards map.
+ * @returns {Object} The new cards map.
+ * @private
+ */
+function updateCards (method, cards, cardsMap) {
   return cards.reduce((cardsMap, card) =>
-    update(card.id, card => card.deselect(), cardsMap)
-  , cardsMap)
-}
-
-// Selects the given cards in the cards map.
-function selectCards (cards, cardsMap) {
-  return cards.reduce((cardsMap, card) =>
-    update(card.id, card => card.select(), cardsMap)
-  , cardsMap)
-}
-
-// Removes the given cards in the cards map.
-function removeCards (cards, cardsMap) {
-  return cards.reduce((cardsMap, card) =>
-    update(card.id, card => card.remove(), cardsMap)
+    update(card.id, applyMethod(method, null), cardsMap)
   , cardsMap)
 }
 
@@ -51,8 +45,8 @@ export default class Game {
   selectCard (id) {
     let cardsMap = this.cardsMap
     let guesses = this.guesses
-    const selectedCards = this.selectedCards
     const card = cardsMap[id]
+    const selectedCards = this.selectedCards
 
     // Ensure the card is able to be selected.
     if (card.state !== 'normal') return this
@@ -61,7 +55,7 @@ export default class Game {
     if (selectedCards.length >= 2) return this
 
     // Select the card.
-    cardsMap = selectCards([card], cardsMap)
+    cardsMap = updateCards('select', [card], cardsMap)
 
     // Increment guesses.
     if (selectedCards.length >= 1) {
@@ -83,10 +77,10 @@ export default class Game {
 
     if (isMatchingPair(selectedCards)) {
       // Remove matching cards.
-      cardsMap = removeCards(selectedCards, cardsMap)
+      cardsMap = updateCards('remove', selectedCards, cardsMap)
     } else {
       // Deselect selected cards.
-      cardsMap = deselectCards(selectedCards, cardsMap)
+      cardsMap = updateCards('deselect', selectedCards, cardsMap)
     }
 
     return copy(this, { cardsMap })
