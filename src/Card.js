@@ -38,7 +38,7 @@ export default class Card {
    */
   remove () {
     return copy(this, {
-      state: 'disabled',
+      state: 'removed',
       position: [this.position[0], 1000],
       rotation: [45, 0, 0],
       zIndex: 100

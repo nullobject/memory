@@ -9,9 +9,9 @@ let a, b, c
 
 describe('Game', () => {
   beforeEach(() => {
-    a = { id: 1, state: 'normal', select: jest.fn(() => a), deselect: jest.fn(() => a), disable: jest.fn(() => a), remove: jest.fn(() => a) }
-    b = { id: 2, state: 'selected', select: jest.fn(() => b), deselect: jest.fn(() => b), disable: jest.fn(() => b), remove: jest.fn(() => b) }
-    c = { id: 3, state: 'disabled', select: jest.fn(() => c), deselect: jest.fn(() => c), disable: jest.fn(() => c), remove: jest.fn(() => c) }
+    a = { id: 1, state: 'normal', select: jest.fn(() => a), deselect: jest.fn(() => a), remove: jest.fn(() => a) }
+    b = { id: 2, state: 'selected', select: jest.fn(() => b), deselect: jest.fn(() => b), remove: jest.fn(() => b) }
+    c = { id: 3, state: 'removed', select: jest.fn(() => c), deselect: jest.fn(() => c), remove: jest.fn(() => c) }
   })
 
   describe('#cards', () => {
@@ -48,7 +48,7 @@ describe('Game', () => {
       expect(b.select).not.toHaveBeenCalled()
     })
 
-    it('does not allow selecting cards that are disabled', () => {
+    it('does not allow selecting cards that are removed', () => {
       const game = new Game([a, b, c])
       game.selectCard(3)
       expect(c.select).not.toHaveBeenCalled()
