@@ -31,20 +31,9 @@ const styles = {
 }
 
 const GameView = ({ bus, classes, game }) => {
-  const cardViews = game.cards.map((card, index) => {
-    // FIXME: Why do we need to check disabled as well? Because we don't want
-    // cards flipping as they are removed.
-    const selected = card.selected || card.disabled
-
-    return (
-      <CardView
-        bus={bus}
-        card={card}
-        key={card.toString()}
-        selected={selected}
-      />
-    )
-  })
+  const cardViews = game.cards.map((card, index) => (
+    <CardView bus={bus} card={card} key={card.toString()} />
+  ))
 
   return (
     <div className={classes.root}>{cardViews}</div>

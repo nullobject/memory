@@ -53,7 +53,8 @@ const styles = {
   selected: {}
 }
 
-const CardView = ({ bus, card, classes, selected }) => {
+const CardView = ({ bus, card, classes }) => {
+  const selected = card.selected || card.disabled
   const className = classnames(
     classes.root,
     { [classes.selected]: selected }
