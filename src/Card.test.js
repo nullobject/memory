@@ -6,22 +6,21 @@ describe('Card', () => {
   describe('#select', () => {
     it('selects the card', () => {
       const result = card.select()
-      expect(result).toHaveProperty('selected', true)
+      expect(result).toHaveProperty('state', 'selected')
     })
   })
 
   describe('#deselect', () => {
     it('deselects the card', () => {
-      card.selected = true
-      const result = card.deselect()
-      expect(result).toHaveProperty('selected', false)
+      const result = card.select().deselect()
+      expect(result).toHaveProperty('state', 'normal')
     })
   })
 
   describe('#disable', () => {
     it('disables the card', () => {
       const result = card.disable()
-      expect(result).toHaveProperty('disabled', true)
+      expect(result).toHaveProperty('state', 'disabled')
     })
   })
 

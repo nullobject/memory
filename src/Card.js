@@ -5,10 +5,9 @@ export const SIZE = [128, 128]
 
 export default class Card {
   constructor (shape, index) {
-    this.selected = false
-    this.disabled = false
     this.id = index
     this.shape = shape
+    this.state = 'normal'
     this.position = [(index % COLUMNS) * SIZE[0], Math.floor(index / COLUMNS) * SIZE[1]]
     this.rotation = [0, 0, 0]
     this.zIndex = index
@@ -20,7 +19,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   select () {
-    return copy(this, { selected: true })
+    return copy(this, { state: 'selected' })
   }
 
   /**
@@ -29,7 +28,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   deselect () {
-    return copy(this, { selected: false })
+    return copy(this, { state: 'normal' })
   }
 
   /**
@@ -38,7 +37,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   disable () {
-    return copy(this, { disabled: true })
+    return copy(this, { state: 'disabled' })
   }
 
   /**

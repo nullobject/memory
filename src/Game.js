@@ -35,12 +35,16 @@ export default class Game {
     return values(this.cardsMap)
   }
 
+  get activeCards () {
+    return this.cards.filter(card => card.state !== 'normal')
+  }
+
   get selectedCards () {
-    return this.cards.filter(get('selected'))
+    return this.cards.filter(card => card.state === 'selected')
   }
 
   get disabledCards () {
-    return this.cards.filter(get('disabled'))
+    return this.cards.filter(card => card.state === 'disabled')
   }
 
   constructor (cards) {
@@ -65,8 +69,8 @@ export default class Game {
     const selectedCards = this.selectedCards
     const card = cardsMap[id]
 
-    // Ensure the card is not already selected.
-    if (card.selected) return this
+    // Ensure the card is able to be selected.
+    if (card.state !== 'normal') return this
 
     // Ensure that we can only select a single pair of cards.
     if (selectedCards.length >= 2) return this

@@ -54,7 +54,7 @@ const styles = {
 }
 
 const CardView = ({ bus, card, classes }) => {
-  const selected = card.selected || card.disabled
+  const selected = card.state !== 'normal'
   const className = classnames(
     classes.root,
     { [classes.selected]: selected }
