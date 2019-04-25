@@ -19,8 +19,8 @@ const cards = shapes.map((shape, index) => new Card(shape, index))
 const game = new Game(cards)
 const bus = new Bus()
 
-// A signal that emits the game state.
-const gameSignal = bus.scan(transformer, game).dedupe()
+// The game signal scans the reducer function over events on the input signal.
+const gameSignal = bus.scan(reducer, game).dedupe()
 
 // A signal that emits selected pairs of cards.
 const pairsSignal = gameSignal
@@ -46,7 +46,14 @@ if (module.hot) {
   })
 }
 
-function transformer (game, event) {
+/**
+ * Applies an event to the current game state to yield a new game state.
+ *
+ * @param {Game} game The current game state.
+ * @param {Object} event The event.
+ * @returns A new game state.
+ */
+function reducer (game, event) {
   if (event === 'end-turn') {
     game = game.endTurn()
   } else if (event.type === 'select-card') {
