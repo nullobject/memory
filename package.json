@@ -1,8 +1,8 @@
 {
   "name": "memory",
   "version": "1.0.0",
-  "description": "",
-  "author": "Josh Bassett <josh.bassett@gmail.com> (http://joshbassett.info)",
+  "description": "A game of Memory played in the browser.",
+  "author": "Josh Bassett <hello@joshbassett.info> (http://joshbassett.info)",
   "license": "MIT",
   "private": true,
   "scripts": {
