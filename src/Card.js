@@ -1,4 +1,4 @@
-import { set } from 'fkit'
+import { eqBy, get, set } from 'fkit'
 
 export default class Card {
   constructor (shape, id) {
@@ -41,7 +41,7 @@ export default class Card {
    * @returns {Card} The new card state.
    */
   equals (other) {
-    return other.shape === this.shape
+    return eqBy(get('shape'), this, other)
   }
 
   /**

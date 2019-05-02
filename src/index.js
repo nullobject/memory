@@ -27,8 +27,8 @@ const pairsSignal = gameSignal
   .map(get('selectedCards'))
   .filter(cards => cards.length >= 2)
 
-// A signal that emits a `end-turn` event a short time after a pair of
-// cards has been selected.
+// A signal that emits a `end-turn` event a short time after a pair of cards has
+// been selected.
 const deselectSignal = pairsSignal.delay(DESELECT_DELAY).always('end-turn')
 
 const subscriptions = [

@@ -27,7 +27,7 @@ export default class Game {
   }
 
   constructor (cards) {
-    // A map from card IDs to cards.
+    // A map from card identifiers to cards.
     this.cardsMap = cards.reduce((cardsMap, card) =>
       set(card.id, card, cardsMap)
     , {})
