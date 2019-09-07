@@ -23,9 +23,10 @@ const styles = {
     }
   },
   root: {
+    display: 'flex',
+    flexWrap: 'wrap',
     fontSize: 100,
     height: '5em',
-    position: 'relative',
     width: '5em'
   }
 }
