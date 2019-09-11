@@ -31,7 +31,6 @@ const styles = {
     backfaceVisibility: 'hidden',
     border: '1px solid #ccc',
     borderRadius: 4,
-    boxShadow: '0px 10px 30px -5px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     justifyContent: 'center',
     position: 'absolute'
