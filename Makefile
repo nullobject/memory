@@ -18,4 +18,4 @@ lint:
 	@npx standard "src/**/*.js"
 
 clean:
-	@rm -rf dist node_modules
+	@rm -rf dist
