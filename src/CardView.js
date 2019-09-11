@@ -15,13 +15,12 @@ const styles = {
     }
   },
   flipper: {
-    position: 'relative',
     transition: '0.3s',
     transformStyle: 'preserve-3d'
   },
   front: {
     backgroundColor: 'papayawhip',
-    zIndex: 2
+    transform: 'rotateX(0deg)' // hack to fix backface visibility issue in Firefox
   },
   back: {
     backgroundColor: 'mintcream',
